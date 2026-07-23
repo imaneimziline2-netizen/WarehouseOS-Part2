@@ -1,40 +1,40 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Session } from "next-auth";
+import { Mail, User } from "lucide-react";
 
-export default function UserCard() {
+type UserCardProps = {
+  session: Session | null;
+};
+
+export default function UserCard({
+  session,
+}: UserCardProps) {
   return (
     <div className="rounded-xl border bg-white p-6 shadow-sm">
-      <div className="flex flex-col items-center">
-        <Avatar className="h-24 w-24">
-          <AvatarImage src="/avatar.jpg" alt="John Doe" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
+      <div className="flex justify-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-900 text-2xl font-bold text-white">
+          {session?.user?.name?.charAt(0).toUpperCase()}
+        </div>
+      </div>
 
-        <h2 className="mt-4 text-2xl font-semibold">
-          John Doe
+      <div className="mt-6 text-center">
+        <h2 className="text-xl font-semibold">
+          {session?.user?.name}
         </h2>
 
         <p className="text-sm text-slate-500">
-          Logistics Administrator
+          Warehouse Administrator
         </p>
       </div>
 
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between border-b pb-2">
-          <span className="text-sm text-slate-500">Email</span>
-          <span className="font-medium">john@example.com</span>
+      <div className="mt-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <Mail size={18} />
+          <span>{session?.user?.email}</span>
         </div>
 
-        <div className="flex justify-between border-b pb-2">
-          <span className="text-sm text-slate-500">Department</span>
-          <span className="font-medium">Central Hub</span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="text-sm text-slate-500">Access Level</span>
-
-          <span className="rounded bg-slate-100 px-2 py-1 text-sm">
-            Admin
-          </span>
+        <div className="flex items-center gap-3">
+          <User size={18} />
+          <span>Active Session</span>
         </div>
       </div>
     </div>
