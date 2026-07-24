@@ -1,3 +1,5 @@
+import LogoutButton from "../LogoutButton";
+
 export default function Footer() {
   return (
     <footer className="border-t bg-white mt-16">
@@ -10,9 +12,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <button className="text-sm font-medium hover:text-red-500">
-          Logout
-        </button>
+         <LogoutButton />
       </div>
     </footer>
   );
