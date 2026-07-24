@@ -1,9 +1,22 @@
-version: "3.9"
-
 services:
+  mongodb:
+    image: mongo:7
+    container_name: warehouseos-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
   warehouseos:
     build: .
+    container_name: warehouseos-app
     ports:
       - "3000:3000"
     env_file:
-      - .env.local
+      - .env
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
