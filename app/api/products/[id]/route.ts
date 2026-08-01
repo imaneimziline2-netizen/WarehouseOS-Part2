@@ -27,7 +27,7 @@ export async function GET(
     );
   }
 
-  return NextResponse.json(product);
+ return NextResponse.json([], { status: 200 }); 
 }
 
 export async function PUT(

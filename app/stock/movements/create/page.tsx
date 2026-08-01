@@ -76,7 +76,7 @@ useEffect(() => {
     setServerError("");
 
     try {
-      const response = await fetch("/api/stock/movements", {
+      const response = await fetch("/api/stock/movement", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

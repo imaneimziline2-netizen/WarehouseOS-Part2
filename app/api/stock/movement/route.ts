@@ -26,14 +26,11 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
     
-    // تحليل الجسم
     const body = await request.json();
     console.log("📦 API Body Received:", body);
 
-    // 1. التحقق من Zod
     const validation = stockMovementSchema.safeParse(body);
     if (!validation.success) {
-      console.log("❌ Validation failed:", validation.error.flatten().fieldErrors);
       return NextResponse.json(
         { errors: validation.error.flatten().fieldErrors },
         { status: 400 }
@@ -42,11 +39,9 @@ export async function POST(request: NextRequest) {
 
     const { productId, type, quantity, note } = validation.data;
 
-    // 2. البحث عن المنتوج
     const product = await Product.findById(productId);
     
     if (!product) {
-      console.log("❌ Product not found for ID:", productId);
       return NextResponse.json(
         { message: "Product not found. Please select a valid product." },
         { status: 404 }
@@ -60,7 +55,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. الحسابات واللوجيك
     const oldStock = product.quantity;
     
     if (type === "OUT") {
@@ -75,12 +69,9 @@ export async function POST(request: NextRequest) {
       product.quantity += quantity;
     }
 
-    console.log(`🔄 Stock updated: ${oldStock} -> ${product.quantity}`);
 
-    // 4. الحفظ فالداتابيز (مهم جداً هنا)
     await product.save();
 
-    // 5. تسجيل الحركة
     const movement = await StockMovement.create({
       product: product._id.toString(),
       type,
@@ -90,7 +81,6 @@ export async function POST(request: NextRequest) {
 
     console.log("✅ Movement saved successfully!");
 
-    // إرجاع النجاح
     return NextResponse.json(
       {
         message: "Stock movement recorded successfully",
