@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { productSchema } from "@/lib/validations";
+import Category from "@/models/Category"; 
+
 
 export async function GET() {
   try {
@@ -60,3 +62,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

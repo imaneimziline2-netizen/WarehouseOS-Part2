@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
-import { Link } from "lucide-react";
+import Link from "next/link";
+import Category from "@/models/Category"; 
+
+
 
 type Props = {
     params: Promise<{
@@ -15,7 +18,7 @@ export default async function ProductDetailsPage({ params }: Props) {
 
     await connectDB();
 
-    const product = await Product.findById(id);
+const product = await Product.findById(id).populate("category");
 
     if (!product) {
         notFound();

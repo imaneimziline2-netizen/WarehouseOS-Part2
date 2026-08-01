@@ -31,40 +31,46 @@ type FieldErrors = {
     quantity?: string[];
 };
 
-export default function ProductForm() {
+type Props = {
+    product?: ProductFormData & {
+        _id?: string;
+    };
+};
+
+export default function ProductForm({ product }: Props) {
     const router = useRouter();
 
     const [categories, setCategories] = useState<Category[]>([]);
 
     const [formData, setFormData] = useState<ProductFormData>({
-        name: "",
-        sku: "",
-        description: "",
-        category: "",
-        price: 0,
-        quantity: 0,
+        name: product?.name ?? "",
+        sku: product?.sku ?? "",
+        description: product?.description ?? "",
+        category: product?.category ?? "",
+        price: product?.price ?? 0,
+        quantity: product?.quantity ?? 0,
     });
 
     const [errors, setErrors] = useState<FieldErrors>({});
     const [serverError, setServerError] = useState("");
     const [loading, setLoading] = useState(false);
 
-   useEffect(() => {
-  async function fetchCategories() {
-    try {
-      const response = await fetch("/api/categories");
-      const data = await response.json();
+    useEffect(() => {
+        async function fetchCategories() {
+            try {
+                const response = await fetch("/api/categories");
+                const data = await response.json();
 
-      console.log(data); 
+                console.log(data);
 
-      setCategories(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+                setCategories(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-  fetchCategories(); 
-}, []);
+        fetchCategories();
+    }, []);
 
     function handleChange(
         e: ChangeEvent<
@@ -88,13 +94,16 @@ export default function ProductForm() {
         setServerError("");
 
         try {
-            const response = await fetch("/api/products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            const response = await fetch(
+                product ? `/api/products/${product._id}` : "/api/products",
+                {
+                    method: product ? "PUT" : "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
                 },
-                body: JSON.stringify(formData),
-            });
+            );
 
             const data = await response.json();
 
@@ -251,7 +260,13 @@ export default function ProductForm() {
                     </div>
 
                     <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Creating..." : "Create Product"}
+                        {loading
+                            ? product
+                                ? "Updating..."
+                                : "Creating..."
+                            : product
+                              ? "Update Product"
+                              : "Create Product"}
                     </Button>
                 </form>
             </CardContent>

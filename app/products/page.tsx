@@ -1,25 +1,33 @@
 import Link from "next/link";
 
 import { connectDB } from "@/lib/mongodb";
-import Product from "@/models/Product";
-import { Button } from "@/components/ui/Button";
+import "@/models/Category";
+import Product from "@/models/Product"; 
+import ArchiveProductButton from "@/components/ArchiveProductButton";
+
+
 
 export default async function ProductsPage() {
   await connectDB();
 
   const products = await Product.find({
     archived: false,
-  })
+  }).populate("category");
+
+  console.log(products)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <main className="max-w-7xl mx-auto p-6">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">
           Products
         </h1>
 
-        <Link href="/products/create">
-          <Button>Add Product</Button>
+        <Link
+          href="/products/create"
+          className="rounded-md bg-black px-4 py-2 text-white"
+        >
+          Add Product
         </Link>
       </div>
 
@@ -37,62 +45,64 @@ export default async function ProductsPage() {
           </thead>
 
           <tbody>
-            {products.length === 0 ? (
+            {products.map((product) => (
+              <tr
+                key={product._id}
+                className="border-t"
+              >
+                <td className="p-3">
+                  {product.name}
+                </td>
+
+                <td className="p-3">
+                  {product.sku}
+                </td>
+
+                <td className="p-3">
+                  {product.category?.name}
+                </td>
+
+                <td className="p-3">
+                  {product.price} MAD
+                </td>
+
+                <td className="p-3">
+                  {product.quantity}
+                </td>
+
+                <td className="p-3 flex gap-3">
+                  <Link
+                    href={`/products/${product._id}`}
+                    className="text-blue-600"
+                  >
+                    View
+                  </Link>
+
+                  <Link
+                    href={`/products/${product._id}/edit`}
+                    className="text-green-600"
+                  >
+                    Edit
+                  </Link>
+
+                  <ArchiveProductButton id={product._id.toString()} />
+                </td>
+              </tr>
+            ))}
+
+            {products.length === 0 && (
               <tr>
                 <td
                   colSpan={6}
-                  className="p-6 text-center text-gray-500"
+                  className="p-6 text-center text-slate-500"
                 >
                   No products found.
                 </td>
               </tr>
-            ) : (
-              products.map((product) => (
-                <tr
-                  key={product._id}
-                  className="border-t"
-                >
-                  <td className="p-3">{product.name}</td>
-
-                  <td className="p-3">{product.sku}</td>
-
-                  <td className="p-3">
-                    {/* {product.category?.name} */}
-                  </td>
-
-                  <td className="p-3">
-                    {product.price} MAD
-                  </td>
-
-                  <td className="p-3">
-                    {product.quantity}
-                  </td>
-
-                  <td className="p-3 flex gap-3">
-                    <Link
-                      href={`/products/${product._id}`}
-                      className="text-blue-600"
-                    >
-                      View
-                    </Link>
-
-                    <Link
-                      href={`/products/${product._id}/edit`}
-                      className="text-green-600"
-                    >
-                      Edit
-                    </Link>
-
-                    <button className="text-red-600">
-                      Archive
-                    </button>
-                  </td>
-                </tr>
-              ))
             )}
           </tbody>
         </table>
       </div>
-    </div>
+    </main>
   );
 }

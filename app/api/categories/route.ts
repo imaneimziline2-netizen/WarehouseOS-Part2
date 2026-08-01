@@ -5,6 +5,7 @@ import Category from "@/models/Category";
 import { categorySchema } from "@/lib/validations";
 
 
+
 export async function GET() {
   try {
     await connectDB();
