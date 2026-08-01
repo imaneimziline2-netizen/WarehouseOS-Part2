@@ -1,6 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+
 export const metadata: Metadata = {
   title: "WarehouseOS",
   description: "Warehouse Management System",
@@ -13,7 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen bg-slate-50">
+        <Header />
+
+        <main className="min-h-[calc(100vh-140px)]">
+          {children}
+        </main>
+
+        <Footer />
+      </body>
     </html>
   );
 }

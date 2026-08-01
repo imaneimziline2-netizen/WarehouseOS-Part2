@@ -62,3 +62,21 @@ export const categorySchema = z.object({
     .string()
     .min(5, "Description is required"),
 });
+
+
+
+export const stockMovementSchema = z.object({
+  productId: z.string().min(1, { message: "Product is required" }),
+    type: z.string()
+    .min(1, { message: "Movement type is required" })
+    .refine((val) => val === "IN" || val === "OUT", {
+      message: "Type must be either 'IN' or 'OUT'",
+    }),
+    
+  quantity: z.coerce
+    .number()
+    .int({ message: "Quantity must be an integer" })
+    .positive({ message: "Quantity must be greater than 0" }),
+    
+  note: z.string().optional(),
+});
