@@ -29,9 +29,9 @@ export default async function ProductsPage() {
         </Link>
       </div>
 
-      {/* Table Section */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm text-left">
+      {/* Table Section - هنا غيرنا overflow-hidden لـ overflow-x-auto، وزيدنا min-w للجدول */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+        <table className="w-full text-sm text-left min-w-[800px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-6 py-4 font-medium text-gray-500 uppercase tracking-wider">Name</th>
